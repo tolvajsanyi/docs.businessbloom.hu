@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Tailwind CSS cheatsheet (v4-kompatibilis) — magyar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --fg: #0a0a0a;
+    --muted: #525252;
+    --bg: #ffffff;
+    --accent: #0ea5e9;
+    --border: #e5e7eb;
+  }
+
+  /* Nyomtatás */
+  @media print {
+    @page { size: A4; margin: 10mm; }
+    a[href]:after { content: ""; }
+    .page { max-width: 100%; padding: 0; }
+    .card { break-inside: avoid; }
+  }
+
+  /* Alap tipó + finom fluid skála */
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    /* 13px alap, picit nő nagyobb nézeten */
+    font: clamp(13px, 0.9rem + 0.1vw, 15px)/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page { max-width: 1200px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: clamp(22px, 1.2rem + 0.8vw, 28px); margin: 0 0 6px; }
+  h2 { font-size: clamp(15px, 0.95rem + 0.25vw, 18px); margin: 18px 0 6px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  p.lead { color: var(--muted); margin: 0 0 10px; }
+
+  /* Grid — mobil 1 oszlop, majd lépcsőzetesen */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px 12px;
+  }
+  .grid.wide {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px 12px;
+  }
+
+  /* 640px+ (sm): 2 oszlop */
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .grid.wide { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* 1024px+ (lg): 3 oszlop */
+  @media (min-width: 1024px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid.wide { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* 1280px+ (xl): wide → 4 oszlop */
+  @media (min-width: 1280px) {
+    .grid.wide { grid-template-columns: repeat(4, 1fr); }
+
+    .grid.wide.col-2 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .card { border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: #fff; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  code { background: #f6f7f8; padding: 0 4px; border-radius: 4px; }
+  pre { background: #f6f7f8; padding: 10px; border-radius: 8px; overflow: auto; }
+  ul { margin: 0; padding-left: 16px; }
+  .small { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  .k {
+    display: inline-block;
+    background: #f6f7f8;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin: 2px 4px 2px 0;
+    line-height: 1.2;
+    white-space: nowrap; /* tokenek ne törjenek csúnyán */
+  }
+
+  .muted { color: var(--muted); }
+
+  /* 4 oszlopos segédrács is legyen rugalmas */
+  .cols-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+  }
+  @media (min-width: 768px) {
+    .cols-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* Kisebb kijelzőn kicsit nagyobb belső margó az olvashatóságért */
+  @media (max-width: 399.98px) {
+    .page { padding: 14px; }
+    .card { padding: 8px; }
+  }
+
+  /* Sötét mód (ha a rendszer kéri) */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #e5e7eb;
+      --muted: #9ca3af;
+      --bg: #0b0b0c;
+      --border: #26272b;
+    }
+    body { background: var(--bg); color: var(--fg); }
+    .card { background: #111214; border-color: var(--border); }
+    code, pre { background: #15171a; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <h1>Tailwind CSS cheatsheet <span class="muted">(v4-kompatibilis)</span></h1>
+    <p class="lead">Nyomtatáshoz: böngésző <strong>Nyomtatás</strong> (Ctrl/Cmd+P) &rarr; Méretezés: „Fit to page”, margó: „None” vagy „10&nbsp;mm”. Frissítve: 2025-08-23.</p>
+
+    <h2>Variáns prefixek (állapotok &amp; reszponzív)</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Reszponzív</strong><br>
+        <span class="k">sm:</span><span class="k">md:</span><span class="k">lg:</span><span class="k">xl:</span><span class="k">2xl:</span>
+        <div class="small">Példa: <code>sm:text-base lg:text-lg</code></div>
+      </div>
+      <div class="card">
+        <strong>Állapot</strong><br>
+        <span class="k">hover:</span><span class="k">focus:</span><span class="k">focus-visible:</span><span class="k">active:</span><span class="k">disabled:</span><span class="k">visited:</span>
+        <div class="small">Példa: <code>hover:bg-sky-600</code></div>
+      </div>
+      <div class="card">
+        <strong>Csoport &amp; peer</strong><br>
+        <span class="k">group-hover:</span><span class="k">group-focus:</span><span class="k">peer-focus:</span><span class="k">peer-invalid:</span>
+        <div class="small">Példa: <code>group/title hover:underline</code></div>
+      </div>
+      <div class="card">
+        <strong>Téma &amp; mozgás</strong><br>
+        <span class="k">dark:</span><span class="k">rtl:</span><span class="k">ltr:</span><span class="k">motion-safe:</span><span class="k">motion-reduce:</span>
+        <div class="small">Példa: <code>dark:bg-zinc-900</code></div>
+      </div>
+      <div class="card">
+        <strong>Adat-attribútum</strong><br>
+        <span class="k">[data-open]:</span><span class="k">[aria-expanded="true"]:</span>
+        <div class="small">Példa: <code>[data-open]:block</code></div>
+      </div>
+      <div class="card">
+        <strong>Nyomtatás</strong><br>
+        <span class="k">print:</span>
+        <div class="small">Példa: <code>print:hidden</code></div>
+      </div>
+    </div>
+
+    <h2>Elrendezés &amp; dobozmodell</h2>
+    <div class="grid wide col-2">
+      <div class="card">
+        <strong>Megjelenítés</strong><br>
+        <span class="k">block</span><span class="k">inline</span><span class="k">inline-block</span><span class="k">flex</span><span class="k">inline-flex</span><span class="k">grid</span><span class="k">hidden</span>
+        <div class="small"><code>contents</code>, <code>table</code>, stb.</div>
+        <strong>Pozíció</strong><br>
+        <span class="k">static</span><span class="k">relative</span><span class="k">absolute</span><span class="k">fixed</span><span class="k">sticky</span><br>
+        <span class="k">inset-0</span><span class="k">top-1/2</span><span class="k">-left-2</span>
+      </div>
+      <div class="card">
+        <strong>Szélesség/Magasság</strong><br>
+        <span class="k">w-*</span><span class="k">min-w-*</span><span class="k">max-w-*</span><span class="k">h-*</span><span class="k">min-h-*</span><span class="k">max-h-*</span><br>
+        <span class="k">w-full</span><span class="k">w-screen</span><span class="k">h-dvh</span><span class="k">h-screen</span>
+        <div class="small">Példa: <code>max-w-prose</code>, <code>h-96</code></div>
+        <strong>Overflow</strong><br>
+        <span class="k">overflow-hidden</span><span class="k">overflow-x-auto</span><span class="k">overscroll-contain</span>
+      </div>
+    </div>
+
+    <h2>Spacing (margó/padding &amp; gap)</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Margó</strong><br>
+        <span class="k">m-0</span><span class="k">m-1</span><span class="k">m-2</span><span class="k">m-3</span><span class="k">m-4</span><span class="k">m-6</span><span class="k">m-8</span><span class="k">m-12</span><br>
+        <span class="k">mx-auto</span><span class="k">mt-6</span><span class="k">-mb-2</span>
+      </div>
+      <div class="card">
+        <strong>Padding</strong><br>
+        <span class="k">p-0</span><span class="k">p-2</span><span class="k">p-4</span><span class="k">p-6</span><span class="k">p-8</span><br>
+        <span class="k">px-4</span><span class="k">py-2</span><span class="k">ps-4</span><span class="k">pe-4</span>
+      </div>
+      <div class="card">
+        <strong>Gap &amp; space-*-*</strong><br>
+        <span class="k">gap-2</span><span class="k">gap-4</span><span class="k">gap-x-6</span><span class="k">gap-y-8</span><br>
+        <span class="k">space-x-2</span><span class="k">space-y-4</span>
+      </div>
+    </div>
+
+    <h2>Flex &amp; Grid</h2>
+    <div class="grid wide col-2">
+      <div class="card">
+        <strong>Flex</strong><br>
+        <span class="k">flex-row</span><span class="k">flex-col</span><span class="k">flex-wrap</span><br>
+        <span class="k">items-start</span><span class="k">items-center</span><span class="k">items-stretch</span><br>
+        <span class="k">justify-start</span><span class="k">justify-between</span><span class="k">justify-center</span><br>
+        <span class="k">self-start</span><span class="k">grow</span><span class="k">shrink</span><span class="k">basis-1/2</span>
+      </div>
+      <div class="card">
+        <strong>Grid</strong><br>
+        <span class="k">grid-cols-1</span><span class="k">grid-cols-2</span><span class="k">md:grid-cols-3</span><span class="k">lg:grid-cols-4</span><br>
+        <span class="k">col-span-2</span><span class="k">auto-rows-min</span><span class="k">place-items-center</span><span class="k">place-content-between</span>
+      </div>
+    </div>
+
+    <h2>Tipográfia</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Méret</strong><br>
+        <span class="k">text-xs</span><span class="k">text-sm</span><span class="k">text-base</span><span class="k">text-lg</span><span class="k">text-xl</span><span class="k">text-2xl</span><span class="k">text-3xl</span><span class="k">text-4xl</span><span class="k">text-5xl</span><span class="k">text-6xl</span><span class="k">text-7xl</span><span class="k">text-8xl</span><span class="k">text-9xl</span><br>
+        <span class="k">leading-6</span><span class="k">leading-7</span><span class="k">tracking-tight</span><span class="k">tracking-wide</span>
+      </div>
+      <div class="card">
+        <strong>Stílus &amp; súly</strong><br>
+        <span class="k">font-sans</span><span class="k">font-serif</span><span class="k">font-mono</span><br>
+        <span class="k">font-normal</span><span class="k">font-medium</span><span class="k">font-semibold</span><span class="k">font-bold</span><span class="k">italic</span><span class="k">not-italic</span><br>
+        <span class="k">text-left</span><span class="k">text-center</span><span class="k">text-balance</span>
+      </div>
+      <div class="card">
+        <strong>Színek &amp; dekoráció</strong><br>
+        <span class="k">text-zinc-700</span><span class="k">text-sky-600</span><span class="k">decoration-2</span><span class="k">underline</span><span class="k">line-through</span><span class="k">no-underline</span><br>
+        <span class="k">truncate</span><span class="k">line-clamp-3</span>
+      </div>
+    </div>
+
+    <h2>Színek, háttér, keretek</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Háttér</strong><br>
+        <span class="k">bg-white</span><span class="k">bg-zinc-50</span><span class="k">bg-sky-600</span><span class="k">bg-gradient-to-r</span><span class="k">from-sky-500</span><span class="k">via-cyan-500</span><span class="k">to-blue-600</span>
+      </div>
+      <div class="card">
+        <strong>Keret &amp; radius</strong><br>
+        <span class="k">border</span><span class="k">border-2</span><span class="k">border-zinc-200</span><span class="k">rounded</span><span class="k">rounded-lg</span><span class="k">rounded-full</span>
+      </div>
+      <div class="card">
+        <strong>Árnyék &amp; gyűrű</strong><br>
+        <span class="k">shadow</span><span class="k">shadow-md</span><span class="k">shadow-xl</span><span class="k">ring-1</span><span class="k">ring-2</span><span class="k">ring-sky-500</span><span class="k">ring-offset-2</span>
+      </div>
+    </div>
+
+    <h2>Áttűnések &amp; transzformációk</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Transition</strong><br>
+        <span class="k">transition</span><span class="k">transition-colors</span><span class="k">duration-200</span><span class="k">duration-500</span><span class="k">ease-in</span><span class="k">ease-out</span><span class="k">delay-75</span>
+      </div>
+      <div class="card">
+        <strong>Transform</strong><br>
+        <span class="k">scale-95</span><span class="k">scale-100</span><span class="k">scale-110</span><span class="k">rotate-6</span><span class="k">-rotate-3</span><span class="k">translate-y-1</span><span class="k">-translate-x-2</span><span class="k">skew-x-3</span>
+      </div>
+      <div class="card">
+        <strong>Átlátszóság &amp; blur</strong><br>
+        <span class="k">opacity-0</span><span class="k">opacity-50</span><span class="k">opacity-100</span><span class="k">backdrop-blur</span><span class="k">backdrop-blur-md</span>
+      </div>
+    </div>
+
+    <h2>Arbitrary values (tetszőleges értékek)</h2>
+    <div class="card">
+      <code>p-[3px] w-[72px] h-[2.5rem] bg-[#0ea5e9] opacity-[0.85] [mask-image:linear-gradient(#000,transparent)] content-['Új']</code>
+      <div class="small">Használatuk célszerű, de mértékkel: először próbáld a skálát.</div>
+    </div>
+
+    <h2>@apply minták (ismétlődő UI-elemekhez)</h2>
+    <div class="grid wide col-2">
+      <div class="card">
+        <strong>Gomb</strong>
+<pre><code>.btn {
+  @apply inline-flex items-center justify-center gap-2
+    px-4 py-2 rounded-lg font-medium text-white
+    bg-sky-600 hover:bg-sky-700
+    focus-visible:outline-none focus-visible:ring-2
+    focus-visible:ring-offset-2 focus-visible:ring-sky-500
+    active:translate-y-px transition;
+}</code></pre>
+      </div>
+      <div class="card">
+        <strong>Kártya</strong>
+<pre><code>.card {
+  @apply rounded-xl border border-zinc-200 bg-white p-6 shadow-sm
+    dark:bg-zinc-900 dark:border-zinc-800;
+}</code></pre>
+      </div>
+    </div>
+
+    <h2>Hasznos tippek</h2>
+    <ul>
+      <li><strong>Ismétlődés</strong>: utility-k gyors protóhoz, <code>@apply</code> a brand komponensekhez.</li>
+      <li><strong>Reszponzív egy sorban</strong>: <code>sm:</code>, <code>md:</code>, <code>lg:</code> variánsok kombinálhatók az állapotokkal: <code>sm:hover:</code>.</li>
+      <li><strong>Sötét mód</strong>: <code>dark:</code> prefix; root-on <code>class="dark"</code> vagy media query.</li>
+      <li><strong>Konfliktusok</strong>: ha saját CSS-t használsz, tedd <code>@layer base|components|utilities</code> rétegbe.</li>
+    </ul>
+
+    <p class="small muted">Megjegyzés: A leggyakoribb osztályokat tartalmazza; a teljes lista és változások: tailwindcss.com.</p>
+  </div>
+</body>
+</html>
